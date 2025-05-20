@@ -11,6 +11,9 @@ npx create-next-app biblioteca-virtual
 cd biblioteca-virtual
 ```
 
+Caso de erro use o: mkdir "C:\Users\luan.santos\AppData\Roaming\npm"
+
+
 Durante a criação, responda às perguntas:
 
 - TypeScript? **Sim**
