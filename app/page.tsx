@@ -14,7 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
 
   // URL da API
-  const API_URL = "/api/books"
+  const API_URL = "http://localhost:3001/api/books"
 
   // Carregar livros quando a página carregar
   useEffect(() => {
