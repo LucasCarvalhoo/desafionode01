@@ -14,7 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
 
   // URL da API
-  const API_URL = "http://localhost:3001/api/books"
+  const API_URL = "/api/books";
 
   // Carregar livros quando a página carregar
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function Home() {
       const data = await response.json()
       setBooks(data)
       setLoading(false)
-    } catch (error) {
-      console.error("Erro ao buscar livros:", error)
+    } catch (_error) {
+      console.error("Erro ao buscar livros:", _error)
       setLoading(false)
     }
   }
@@ -57,8 +57,8 @@ export default function Home() {
         // Atualizar a lista de livros
         fetchBooks()
       }
-    } catch (error) {
-      console.error("Erro ao adicionar livro:", error)
+    } catch (_error) {
+      console.error("Erro ao adicionar livro:", _error)
     }
   }
 
@@ -74,7 +74,7 @@ export default function Home() {
         fetchBooks()
       }
     } catch (error) {
-      console.error("Erro ao remover livro:", error)
+      console.error("Erro ao remover livro:", _error)
     }
   }
 

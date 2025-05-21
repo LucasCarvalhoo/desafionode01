@@ -1,6 +1,3 @@
-import { headers } from "next/headers"
-import { title } from "process"
-
 const books = [
     { title: "O senhor dos Aneis", author: "J.R.R. Tolkien" },
     { title: "Harry Potter", author: "J.K. Rowling" },
@@ -26,7 +23,7 @@ export async function POST(request: Request) {
         const body = await request.json()
 
         if (!body.title || !body.author) {
-            return new Response(JSON.stringify({ error: "Titulo e autor são obrigatorios" }), {
+            return new Response(JSON.stringify({ _error: "Titulo e autor são obrigatorios" }), {
                 status: 400,
                 headers: {
                     "content-Type": "application/json",
@@ -47,8 +44,8 @@ export async function POST(request: Request) {
                 "content-Type": "application/json",
             },
         })
-    } catch (error) {
-        return new Response(JSON.stringify({ error: "Erro ao processar requisição" }), {
+    } catch (_error) {
+        return new Response(JSON.stringify({ _error: "Erro ao processar requisição" }), {
             status: 500,
             headers: {
                 "content-Type": "application/json",
@@ -65,7 +62,7 @@ export async function DELETE(request: Request) {
 
 
         if (isNaN(index) || index < 0 || index >= books.length) {
-            return new Response(JSON.stringify({ error: "Livro não encontrado" }), {
+            return new Response(JSON.stringify({ _error: "Livro não encontrado" }), {
                 status: 404,
                 headers: {
                     "content-Type": "application/json",
@@ -81,8 +78,8 @@ export async function DELETE(request: Request) {
                 },
         })
 
-    } catch (error) {
-        return new Response(JSON.stringify({error: "Erro ao processar a requisição"}), {
+    } catch (_error) {
+        return new Response(JSON.stringify({_error: "Erro ao processar a requisição"}), {
             status: 500,
             headers: {
                     "content-Type": "application/json",
