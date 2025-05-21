@@ -7,8 +7,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label"
 import { BookOpen, Plus, Trash2 } from "lucide-react"
 
+interface Book {
+  title: string;
+  author: string;
+}
+
 export default function Home() {
-  const [books, setBooks] = useState([])
+  const [books, setBooks] = useState<Book[]>([])
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [loading, setLoading] = useState(true)
@@ -36,7 +41,7 @@ export default function Home() {
   }
 
   // Função para adicionar um novo livro
-  const addBook = async (e) => {
+  const addBook = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!title || !author) return
@@ -63,7 +68,7 @@ export default function Home() {
   }
 
   // Função para remover um livro
-  const removeBook = async (index) => {
+  const removeBook = async (index: number) => {
     try {
       const response = await fetch(`${API_URL}?index=${index}`, {
         method: "DELETE",
@@ -73,7 +78,7 @@ export default function Home() {
         // Atualizar a lista de livros
         fetchBooks()
       }
-    } catch (error) {
+    } catch (_error) {
       console.error("Erro ao remover livro:", _error)
     }
   }
