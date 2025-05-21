@@ -2,6 +2,26 @@
 
 Este projeto consiste em uma aplicação de biblioteca virtual com um frontend em Next.js/React e um backend em Express. Os usuários podem visualizar, adicionar e remover livros da biblioteca.
 
+## Índice
+1. [Pré-requisitos](#1-pré-requisitos)
+2. [Criar o Projeto](#2-criar-um-projeto-nextjs)
+3. [Instalar Dependências do Backend](#3-instalar-dependências-do-backend)
+4. [Instalar Componentes UI](#4-instalar-componentes-ui-shadcnui)
+5. [Instalar Componentes Específicos](#5-instalar-os-componentes-específicos)
+6. [Instalar Ícones](#6-instalar-ícones)
+7. [Criar o Servidor Express](#7-criar-o-servidor-express-backend)
+8. [Configurar o Frontend](#8-modificar-o-frontend-para-usar-o-backend-express)
+9. [Executar a Aplicação](#9-executar-a-aplicação)
+10. [Acessar a Aplicação](#10-acessar-a-aplicação)
+11. [Explicação das Dependências](#11-explicação-das-dependências)
+12. [Explicação dos Componentes UI](#12-explicação-dos-componentes-ui)
+13. [Estrutura de Arquivos](#13-estrutura-de-arquivos)
+14. [Observações Importantes](#14-observações-importantes)
+15. [Funcionalidades](#15-funcionalidades)
+16. [Possíveis Melhorias](#16-possíveis-melhorias)
+17. [Tipagem com TypeScript](#17-tipagem-com-typescript)
+18. [Problemas Comuns e Soluções para Deploy](#18-problemas-comuns-e-soluções-para-deploy)
+
 ## 1. Pré-requisitos
 
 Certifique-se de que você tem o Node.js e o npm instalados:
@@ -277,3 +297,133 @@ A aplicação permite:
 - Adicionar mais detalhes aos livros (capa, descrição, etc.)
 - Implementar busca e filtragem
 - Adicionar categorias/gêneros aos livros
+
+## 17. Tipagem com TypeScript
+
+Para garantir a compatibilidade com o TypeScript e evitar erros durante o build, é importante definir as tipagens corretas. 
+
+### Interface para Livros
+
+```typescript
+// Defina a interface para os livros
+interface Book {
+  title: string;
+  author: string;
+}
+```
+
+### Tipagem de Estados
+
+```typescript
+// Use a tipagem no estado
+const [books, setBooks] = useState<Book[]>([])
+```
+
+### Tipagem de Eventos
+
+```typescript
+// Adicione tipagem para os parâmetros de eventos
+const addBook = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  // ...
+}
+```
+
+### Tipagem de Parâmetros
+
+```typescript
+// Tipagem para outros parâmetros
+const removeBook = async (index: number) => {
+  // ...
+}
+```
+
+### Adaptação para Deploy
+
+Para fazer o deploy na Vercel, é importante usar a API interna do Next.js ou configurar variáveis de ambiente:
+
+```typescript
+// URL da API que se adapta ao ambiente
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? "/api/books" 
+  : "http://localhost:3001/api/books";
+```
+
+## 18. Problemas Comuns e Soluções para Deploy
+
+### Erro de tipagem TypeScript durante o build
+
+Se você encontrar erros de tipagem durante o build na Vercel, como:
+
+```
+Type error: Parameter 'e' implicitly has an 'any' type.
+```
+
+Há duas opções para resolver:
+
+1. **Adicionar tipagens adequadas** (recomendado):
+   ```typescript
+   // Exemplo de como corrigir no arquivo page.tsx
+   interface Book {
+     title: string;
+     author: string;
+   }
+   
+   const [books, setBooks] = useState<Book[]>([])
+   const addBook = async (e: React.FormEvent<HTMLFormElement>) => {...}
+   const removeBook = async (index: number) => {...}
+   ```
+
+2. **Configurar o Next.js para ignorar erros de TypeScript**:
+   Adicione esta configuração ao arquivo `next.config.js`:
+   ```javascript
+   /** @type {import('next').NextConfig} */
+   const nextConfig = {
+     typescript: {
+       ignoreBuildErrors: true,
+     },
+     eslint: {
+       ignoreDuringBuilds: true,
+     },
+   };
+   
+   module.exports = nextConfig;
+   ```
+
+### Erro de ESLint durante o build
+
+Se você encontrar erros de ESLint como:
+
+```
+Error: 'headers' is defined but never used. @typescript-eslint/no-unused-vars
+```
+
+Você pode:
+
+1. **Corrigir os erros** removendo ou usando as variáveis não utilizadas
+2. **Prefixar variáveis não utilizadas com underscore**, por exemplo: `_error` em vez de `error`
+3. **Configurar o ESLint para ignorar esses erros** no arquivo `.eslintrc.js`:
+   ```javascript
+   module.exports = {
+     extends: ['next/core-web-vitals'],
+     rules: {
+       '@typescript-eslint/no-unused-vars': 'off',
+     }
+   };
+   ```
+4. **Usar a configuração do Next.js** para ignorar erros de ESLint:
+   ```javascript
+    Em next.config.js
+   const nextConfig = {
+     eslint: {
+       ignoreDuringBuilds: true,
+     },
+   };
+   ```
+
+### API não disponível na Vercel
+
+Lembre-se que o servidor Express **não é implantado automaticamente** na Vercel. Se você estiver implantando apenas o frontend, você precisa:
+
+1. Utilizar a API interna do Next.js (`/api/books`)
+2. Ou implantar o servidor Express em outra plataforma e atualizar o URL no frontend
